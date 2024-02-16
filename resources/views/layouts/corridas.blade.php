@@ -32,7 +32,7 @@
                 <div class="col-12">
                     <nav class="main-nav">
                         <!-- ***** Logo Start ***** -->
-                        <a href="index.html" class="logo">
+                        <a href="{{route('index')}}" class="logo">
                             <img src="{{ asset('images/logo.png') }}" class="logomarca" alt="">
                         </a>
                         <!-- ***** Logo End ***** -->
@@ -40,8 +40,7 @@
                         <ul class="nav">
                             <li class="scroll-to-section"><a href="{{route('index')}}" class="active">Home</a></li>
                             <li class="scroll-to-section"><a href="{{route('corridas.index')}}">Resultados</a></li>
-                            <li class="scroll-to-section"><a href="#about">Sobre Nós</a></li>
-                            <li><a href="contact-us.html">Contato WhatsApp</a></li>
+                            <li class="scroll-to-section d-none"><a href="#about">Sobre Nós</a></li>
                         </ul>
                         <a class='menu-trigger'>
                             <span>Menu</span>
@@ -108,70 +107,6 @@
         </div>
     </footer>
 
-    <script>
-
-        $(document).ready(function () {
-    // Setup - add a text input to each footer cell
-    $('#myTable thead tr')
-        .clone(true)
-        .addClass('filters')
-        .appendTo('#myTable thead');
-
-    var table = $('#myTable').DataTable({
-        orderCellsTop: true,
-        fixedHeader: true,
-        initComplete: function () {
-            var api = this.api();
-
-            // For each column
-            api
-                .columns()
-                .eq(0)
-                .each(function (colIdx) {
-                    // Set the header cell to contain the input element
-                    var cell = $('.filters th').eq(
-                        $(api.column(colIdx).header()).index()
-                    );
-                    var title = $(cell).text();
-                    $(cell).html('<input type="text" placeholder="' + title + '" />');
-
-                    // On every keypress in this input
-                    $(
-                        'input',
-                        $('.filters th').eq($(api.column(colIdx).header()).index())
-                    )
-                        .off('keyup change')
-                        .on('change', function (e) {
-                            // Get the search value
-                            $(this).attr('title', $(this).val());
-                            var regexr = '({search})'; //$(this).parents('th').find('select').val();
-
-                            var cursorPosition = this.selectionStart;
-                            // Search the column for that value
-                            api
-                                .column(colIdx)
-                                .search(
-                                    this.value != ''
-                                        ? regexr.replace('{search}', '(((' + this.value + ')))')
-                                        : '',
-                                    this.value != '',
-                                    this.value == ''
-                                )
-                                .draw();
-                        })
-                        .on('keyup', function (e) {
-                            e.stopPropagation();
-
-                            $(this).trigger('change');
-                            $(this)
-                                .focus()[0]
-                                .setSelectionRange(cursorPosition, cursorPosition);
-                        });
-                });
-        },
-    });
-});
-    </script>
     <!-- Scripts -->
     <!-- Bootstrap core JavaScript -->
     <script>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\corridas\corridaController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,8 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('layouts.layouts');
-})->name('index');
+Route::get('/', [Controller::class,'index'])->name('index');
 
 Route::resource('corridas', 'App\Http\Controllers\corridas\corridaController');

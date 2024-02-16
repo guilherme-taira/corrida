@@ -34,7 +34,7 @@
                 <div class="col-12">
                     <nav class="main-nav">
                         <!-- ***** Logo Start ***** -->
-                        <a href="index.html" class="logo">
+                        <a  href="{{route('index')}}" class="logo">
                             <img src="{{ asset('images/logo.png') }}" class="logomarca" alt="">
                         </a>
                         <!-- ***** Logo End ***** -->
@@ -42,8 +42,6 @@
                         <ul class="nav">
                             <li class="scroll-to-section"><a href="{{route('index')}}" class="active">Home</a></li>
                             <li class="scroll-to-section"><a href="{{route('corridas.index')}}">Resultados</a></li>
-                            <li class="scroll-to-section"><a href="#about">Sobre Nós</a></li>
-                            <li><a href="contact-us.html">Contato WhatsApp</a></li>
                         </ul>
                         <a class='menu-trigger'>
                             <span>Menu</span>
