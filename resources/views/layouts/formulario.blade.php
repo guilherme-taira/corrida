@@ -34,14 +34,25 @@
                 <div class="col-12">
                     <nav class="main-nav">
                         <!-- ***** Logo Start ***** -->
-                        <a  href="{{route('index')}}" class="logo">
+                        <a href="{{ route('index') }}" class="logo">
                             <img src="{{ asset('images/logo.png') }}" class="logomarca" alt="">
                         </a>
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
+                            @if(Auth::user())
+                            <li class="scroll-to-section text-white py-2">Usuário: {{ Auth::user()->name }}</li>
+                            <li class="scroll-to-section">
+                                <li class="scroll-to-section"><a href="{{route('sair')}}" class="active">Logout</a></li>
+                            </li>
+                            @else
+                            <li class="scroll-to-section"><a href="{{route('login')}}" class="active">Login</a></li>
+                            @endif
+
                             <li class="scroll-to-section"><a href="{{route('index')}}" class="active">Home</a></li>
                             <li class="scroll-to-section"><a href="{{route('corridas.index')}}">Resultados</a></li>
+
+                            <li class="scroll-to-section d-none"><a href="#about">Sobre Nós</a></li>
                         </ul>
                         <a class='menu-trigger'>
                             <span>Menu</span>
@@ -64,46 +75,47 @@
                 </div>
                 <div class="col-lg-12 p-4">
 
-                        <ul class="nacc">
-                            <li class="active p-4">
+                    <ul class="nacc">
+                        <li class="active p-4">
+                            <div>
                                 <div>
-                                    <div>
 
-                                        @if ($errors->any())
-                                            <div>
-                                                <ul>
-                                                    @foreach ($errors->all() as $error)
-                                                        <li>{{ $error }}</li>
-                                                    @endforeach
-                                                </ul>
+                                    @if ($errors->any())
+                                        <div>
+                                            <ul>
+                                                @foreach ($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
+
+                                    @if (session('success'))
+                                        <div>{{ session('success') }}</div>
+                                    @endif
+
+                                    <form action="{{ route('corridas.store') }}" method="post"
+                                        enctype="multipart/form-data">
+                                        @csrf
+
+                                        <div class="col-12">
+                                            <label for="validationTextarea" class="form-label">Dados da Corrida</label>
+                                            <textarea class="form-control is-invalid" name="dados" id="validationTextarea"
+                                                placeholder="Coloque os dados da corrida" required></textarea>
+                                            <div class="invalid-feedback">
+                                                Please enter a message in the textarea.
                                             </div>
-                                        @endif
+                                        </div>
 
-                                        @if (session('success'))
-                                            <div>{{ session('success') }}</div>
-                                        @endif
-
-                                        <form action="{{ route('corridas.store') }}" method="post"
-                                            enctype="multipart/form-data">
-                                            @csrf
-
-                                              <div class="col-12">
-                                                <label for="validationTextarea" class="form-label">Dados da Corrida</label>
-                                                <textarea class="form-control is-invalid" name="dados" id="validationTextarea" placeholder="Coloque os dados da corrida" required></textarea>
-                                                <div class="invalid-feedback">
-                                                  Please enter a message in the textarea.
-                                                </div>
-                                              </div>
-
-                                              <div class="col-12">
-                                                <button class="btn btn-primary" type="submit">Enviar</button>
-                                              </div>
-                                        </form>
-                                    </div>
+                                        <div class="col-12">
+                                            <button class="btn btn-primary" type="submit">Enviar</button>
+                                        </div>
+                                    </form>
                                 </div>
-                            </li>
-                        </ul>
-                    </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
         </div>

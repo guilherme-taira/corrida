@@ -77,17 +77,17 @@ class corridaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        //
+        $corrida = corridas::where('id',$id)->update(['name' => $request->name]);
+
+        if($corrida == 1){
+            return redirect()->route('corridas.index')->with('msg',"Evento Alterado com Sucesso!");
+        }
     }
 
     /**
@@ -95,6 +95,10 @@ class corridaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $corrida = corridas::where('id',$id)->delete();
+
+        if($corrida == 1){
+            return redirect()->route('corridas.index')->with('msg',"Evento Apagado com Sucesso!");
+        }
     }
 }

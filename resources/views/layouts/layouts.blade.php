@@ -40,10 +40,19 @@
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
-                            <li class="scroll-to-section"><a href="{{ route('index') }}" class="active">Home</a></li>
-                            <li class="scroll-to-section"><a href="{{ route('corridas.index') }}">Resultados</a></li>
-                            <li class="scroll-to-section d-none"><a href="#about">Sobre Nós</a></li>
+                            @if(Auth::user())
+                            <li class="scroll-to-section text-white py-2">Usuário: {{ Auth::user()->name }}</li>
+                            <li class="scroll-to-section">
+                                <li class="scroll-to-section"><a href="{{route('sair')}}" class="active">Logout</a></li>
+                            </li>
+                            @else
+                            <li class="scroll-to-section"><a href="{{route('login')}}" class="active">Login</a></li>
+                            @endif
 
+                            <li class="scroll-to-section"><a href="{{route('index')}}" class="active">Home</a></li>
+                            <li class="scroll-to-section"><a href="{{route('corridas.index')}}">Resultados</a></li>
+
+                            <li class="scroll-to-section d-none"><a href="#about">Sobre Nós</a></li>
                         </ul>
                         <a class='menu-trigger'>
                             <span>Menu</span>

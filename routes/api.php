@@ -18,6 +18,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
 
-    Route::post('sendData',[getRacingController::class,'storeOrUpdateRacing']);
+    Route::get('sendData',[getRacingController::class,'storeOrUpdateRacing']);
 
 });

@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\corridaAuth;
 use App\Http\Controllers\corridas\corridaController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\admin;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,3 +21,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [Controller::class,'index'])->name('index');
 
 Route::resource('corridas', 'App\Http\Controllers\corridas\corridaController');
+
+Route::middleware('admin')->group(function () {
+    Route::get('edit/{id}',[corridaAuth::class,'edit'])->name('editar');
+    Route::get('logoutOwn',[corridaAuth::class,'logout'])->name('sair');
+});
+
+Auth::routes();
+
