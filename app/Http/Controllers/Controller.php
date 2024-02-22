@@ -17,14 +17,14 @@ class Controller extends BaseController
         $dataView = [];
         $dataView['corrida'] = corridas::latest('created_at')->first();
         $dataView['corridas'] = corridas::orderBy('created_at','desc')->get();
-        $dataFormatada = Carbon::createFromFormat('Y-m-d H:i:s', $dataView['corrida']->created_at )->format('Y-m-d');
+        // $dataFormatada = Carbon::createFromFormat('Y-m-d H:i:s', $dataView['corrida']->created_at )->format('Y-m-d');
 
-        if($dataFormatada == date('Y-m-d'))
-        {
-            $dataView['live'] = true;
-        }else{
-            $dataView['live'] = false;
-        }
+        // if($dataFormatada == date('Y-m-d'))
+        // {
+        //     $dataView['live'] = true;
+        // }else{
+        //     $dataView['live'] = false;
+        // }
 
         return view('layouts.layouts',
         [
