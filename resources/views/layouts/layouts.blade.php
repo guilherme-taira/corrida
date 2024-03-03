@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="{{ asset('css/owl.css') }}">
     <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
     <link rel="stylesheet" href="{{ asset('https://unpkg.com/swiper@7/swiper-bundle.min.css') }}">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
 </head>
@@ -40,17 +40,19 @@
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
-                            @if(Auth::user())
-                            <li class="scroll-to-section text-white py-2">Usuário: {{ Auth::user()->name }}</li>
-                            <li class="scroll-to-section">
-                                <li class="scroll-to-section"><a href="{{route('sair')}}" class="active">Logout</a></li>
-                            </li>
+                            @if (Auth::user())
+                                <li class="scroll-to-section text-white py-2">Usuário: {{ Auth::user()->name }}</li>
+                                <li class="scroll-to-section">
+                                <li class="scroll-to-section"><a href="{{ route('sair') }}" class="active">Logout</a>
+                                </li>
+                                </li>
                             @else
-                            <li class="scroll-to-section"><a href="{{route('login')}}" class="active">Login</a></li>
+                                <li class="scroll-to-section"><a href="{{ route('login') }}" class="active">Login</a>
+                                </li>
                             @endif
 
-                            <li class="scroll-to-section"><a href="{{route('index')}}" class="active">Home</a></li>
-                            <li class="scroll-to-section"><a href="{{route('corridas.index')}}">Resultados</a></li>
+                            <li class="scroll-to-section"><a href="{{ route('index') }}" class="active">Home</a></li>
+                            <li class="scroll-to-section"><a href="{{ route('corridas.index') }}">Resultados</a></li>
 
                             <li class="scroll-to-section d-none"><a href="#about">Sobre Nós</a></li>
                         </ul>
@@ -201,7 +203,7 @@
                                         // Get the search value
                                         $(this).attr('title', $(this).val());
                                         var regexr =
-                                        '({search})'; //$(this).parents('th').find('select').val();
+                                            '({search})'; //$(this).parents('th').find('select').val();
 
                                         var cursorPosition = this.selectionStart;
                                         // Search the column for that value
@@ -231,6 +233,56 @@
             });
         </script>
 
+        <!-- Scripts -->
+        <!-- Bootstrap core JavaScript -->
+        <script src="{{ asset('js/isotope.js')}}"></script>
+        <script src="{{ asset('js/owl-carousel.js')}}"></script>
+        <script src="{{ asset('jquery.min.js') }}"></script>
+        <script src="{{ asset('js/custom.js') }}"></script>
+        <script>
+            var interleaveOffset = 0.5;
+
+            var swiperOptions = {
+                loop: true,
+                speed: 1000,
+                grabCursor: true,
+                watchSlidesProgress: true,
+                mousewheelControl: true,
+                keyboardControl: true,
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev"
+                },
+                on: {
+                    progress: function() {
+                        var swiper = this;
+                        for (var i = 0; i < swiper.slides.length; i++) {
+                            var slideProgress = swiper.slides[i].progress;
+                            var innerOffset = swiper.width * interleaveOffset;
+                            var innerTranslate = slideProgress * innerOffset;
+                            swiper.slides[i].querySelector(".slide-inner").style.transform =
+                                "translate3d(" + innerTranslate + "px, 0, 0)";
+                        }
+                    },
+                    touchStart: function() {
+                        var swiper = this;
+                        for (var i = 0; i < swiper.slides.length; i++) {
+                            swiper.slides[i].style.transition = "";
+                        }
+                    },
+                    setTransition: function(speed) {
+                        var swiper = this;
+                        for (var i = 0; i < swiper.slides.length; i++) {
+                            swiper.slides[i].style.transition = speed + "ms";
+                            swiper.slides[i].querySelector(".slide-inner").style.transition =
+                                speed + "ms";
+                        }
+                    }
+                }
+            };
+
+            var swiper = new Swiper(".swiper-container", swiperOptions);
+        </script>
 
 </body>
 

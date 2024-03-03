@@ -40,17 +40,19 @@
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
-                            @if(Auth::user())
-                            <li class="scroll-to-section text-white py-2">Usuário: {{ Auth::user()->name }}</li>
-                            <li class="scroll-to-section">
-                                <li class="scroll-to-section"><a href="{{route('sair')}}" class="active">Logout</a></li>
-                            </li>
+                            @if (Auth::user())
+                                <li class="scroll-to-section text-white py-2">Usuário: {{ Auth::user()->name }}</li>
+                                <li class="scroll-to-section">
+                                <li class="scroll-to-section"><a href="{{ route('sair') }}" class="active">Logout</a>
+                                </li>
+                                </li>
                             @else
-                            <li class="scroll-to-section"><a href="{{route('login')}}" class="active">Login</a></li>
+                                <li class="scroll-to-section"><a href="{{ route('login') }}" class="active">Login</a>
+                                </li>
                             @endif
 
-                            <li class="scroll-to-section"><a href="{{route('index')}}" class="active">Home</a></li>
-                            <li class="scroll-to-section"><a href="{{route('corridas.index')}}">Resultados</a></li>
+                            <li class="scroll-to-section"><a href="{{ route('index') }}" class="active">Home</a></li>
+                            <li class="scroll-to-section"><a href="{{ route('corridas.index') }}">Resultados</a></li>
 
                             <li class="scroll-to-section d-none"><a href="#about">Sobre Nós</a></li>
                         </ul>
@@ -164,11 +166,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <p>Copyright © 2022 Mexant Co., Ltd. All Rights Reserved.
-
-                        <br>Designed by <a title="CSS Templates" rel="sponsored" href="https://templatemo.com"
-                            target="_blank">TemplateMo</a>
-                    </p>
+                    <p>Copyright © {{ date('Y') }} For Life All Rights Reserved.
                 </div>
             </div>
         </div>
@@ -229,6 +227,10 @@
 
         var swiper = new Swiper(".swiper-container", swiperOptions);
     </script>
+    <script src="{{ asset('js/isotope.min.js') }}"></script>
+    <script src="{{ asset('js/owl-carousel.js') }}"></script>
+    <script src="{{ asset('jquery.min.js') }}"></script>
+    <script src="{{ asset('js/custom.js') }}"></script>
 </body>
 
 </html>

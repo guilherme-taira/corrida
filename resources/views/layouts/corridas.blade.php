@@ -101,21 +101,20 @@
         </div>
     </section>
 
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <p>Copyright © 2022 Mexant Co., Ltd. All Rights Reserved.
-
-                        <br>Designed by <a title="CSS Templates" rel="sponsored" href="https://templatemo.com"
-                            target="_blank">TemplateMo</a>
-                    </p>
+           <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p>Copyright © {{ date('Y') }} For Life All Rights Reserved.
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        </footer>
 
     <!-- Scripts -->
+    <!-- Include jQuery and DataTables -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <!-- Bootstrap core JavaScript -->
     <script>
 
@@ -160,8 +159,12 @@
             }
         };
 
-        var swiper = new Swiper(".swiper-container", swiperOptions);
     </script>
+
+            <script src="{{ asset('js/isotope.js')}}"></script>
+            <script src="{{ asset('js/owl-carousel.js')}}"></script>
+            <script src="{{ asset('jquery.min.js') }}"></script>
+            <script src="{{ asset('js/custom.js') }}"></script>
 </body>
 
 </html>

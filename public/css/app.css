@@ -1,3 +1,7 @@
 .logomarca{
     width: 100px;
 }
+
+.small-font {
+    font-size: 0.8rem; /* Altere o valor conforme necessário */
+}
