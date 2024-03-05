@@ -20,7 +20,7 @@ use App\Http\Middleware\admin;
 
 Route::get('/', [Controller::class,'index'])->name('index');
 
-Route::resource('corridas', 'App\Http\Controllers\corridas\corridaController');
+Route::resource('resultados', 'App\Http\Controllers\corridas\corridaController')->names('corridas')->parameters(['resultados' => 'corrida']);
 
 Route::middleware('admin')->group(function () {
     Route::get('edit/{id}',[corridaAuth::class,'edit'])->name('editar');

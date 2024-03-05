@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="header-text">
-                        <h2>{{ $viewData['title'] }}</h2>
+                        <h2 class="shadow">{{ $viewData['title'] }}</h2>
                         <div class="div-dec"></div>
                     </div>
                 </div>
@@ -23,7 +23,7 @@
                         <th>Nome</th>
                         <th>Corrida</th>
                         <th>Categoria</th>
-                        <th>Sexo (M - F)</th>
+                        <th>Sexo</th>
                         <th>Tempo</th>
                     </tr>
                 </thead>
