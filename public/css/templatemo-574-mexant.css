@@ -1215,8 +1215,10 @@ page heading
     background-position-y: 10px;
     background-repeat: no-repeat;
     background-size: cover;
-    padding: 70px 0px 0px 0px;
+    padding: 70px 10px 10px 10px;
     text-align: center;
+    background-color: #2a2a2a;
+
 }
 
 
@@ -1230,8 +1232,6 @@ page heading
 }
 
 .page-heading {
-    background-color: #2a2a2a;
-    padding: 10px;
     text-align: center;
 }
 
