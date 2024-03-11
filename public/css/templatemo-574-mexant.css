@@ -1215,7 +1215,7 @@ page heading
     background-position-y: 10px;
     background-repeat: no-repeat;
     background-size: cover;
-    padding: 70px 10px 10px 10px;
+    padding: 100px 10px 10px 10px;
     text-align: center;
     background-color: #2a2a2a;
 }
@@ -1241,7 +1241,7 @@ page heading
 }
 
 .page-heading h2 {
-  font-size: 56px;
+  font-size: 46px;
   color: #fff;
   font-weight: 700;
 }
