@@ -1219,6 +1219,7 @@ page heading
     text-align: center;
 }
 
+
 .containerFoto{
     position: relative;
     top: -70px;
@@ -1232,8 +1233,14 @@ page heading
     text-align: center;
 }
 
+.title-responsive{
+    font-size: 4vw;
+    color: #fff;
+    font-weight: 700;
+}
+
 .page-heading h2 {
-  font-size: 56px;
+  font-size: 4vw;
   color: #fff;
   font-weight: 700;
 }

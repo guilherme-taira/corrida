@@ -1,11 +1,12 @@
 @extends('layouts.corridas')
 @section('conteudo')
     <div class="page-heading">
-        <div class="container">
+        <img class="page-headingbg" src="{{ asset('images/heading-bg.jpg') }}" alt="">
+        <div class="containerFoto">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="header-text">
-                        <h2 class="shadow">{{ $viewData['title'] }}</h2>
+                        <h4 class="title-responsive">{{ $viewData['title'] }}</h4>
                         <div class="div-dec"></div>
                     </div>
                 </div>
@@ -148,7 +149,7 @@
                         });
 
 
-                        var api = this.api();
+                    var api = this.api();
 
                     // Armazenar uma cópia dos dados originais da tabela
                     var originalData = api.rows().data().toArray();
