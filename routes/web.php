@@ -18,7 +18,7 @@ use App\Http\Middleware\admin;
 |
 */
 
-Route::get('/', [Controller::class,'index'])->name('index');
+Route::get('/', [corridaController::class,'index'])->name('index');
 
 Route::resource('resultados', 'App\Http\Controllers\corridas\corridaController')->names('corridas')->parameters(['resultados' => 'corrida']);
 
