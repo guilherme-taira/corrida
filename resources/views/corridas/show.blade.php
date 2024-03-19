@@ -56,6 +56,13 @@
                 order: [
                     [0, 'asc']
                 ],
+                "language": {
+                    "info": "",
+                    "paginate": {
+                        "previous": "Anterior",
+                        "next": "Próxima"
+                    }
+                },
                 orderCellsTop: true,
                 fixedHeader: true,
                 initComplete: function() {

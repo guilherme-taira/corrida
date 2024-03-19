@@ -2,7 +2,7 @@
 
 @section('conteudo')
     <div class="page-heading">
-        <img  class="page-headingbg" src="{{asset('images/heading-bg.jpg')}}" alt="">
+        <img class="page-headingbg" src="{{ asset('images/heading-bg.jpg') }}" alt="">
         <div class="containerFoto">
             <div class="row">
                 <div class="col-lg-12">
@@ -47,12 +47,12 @@
                         @if (Auth::user())
                             <td class="link-success text-center"><a class="btn btn-warning"
                                     href="{{ route('editar', ['id' => $corrida->id]) }}">Editar</a></td>
-                            <form method="POST" action="{{route('corridas.destroy',['corrida' => $corrida->id])}}">
-                            @csrf
-                            @method('delete')
-                            <td class="link-success  text-center">
-                                <button type="submit" class="btn btn-danger">Apagar</button>
-                            </td>
+                            <form method="POST" action="{{ route('corridas.destroy', ['corrida' => $corrida->id]) }}">
+                                @csrf
+                                @method('delete')
+                                <td class="link-success  text-center">
+                                    <button type="submit" class="btn btn-danger">Apagar</button>
+                                </td>
                             </form>
                         @endif
                     </tr>
@@ -73,6 +73,13 @@
                 order: [
                     [1, 'desc']
                 ],
+                "language": {
+                    "info": "",
+                    "paginate": {
+                        "previous": "Anterior",
+                        "next": "Próxima"
+                    }
+                },
                 orderCellsTop: true,
                 fixedHeader: true,
                 initComplete: function() {
