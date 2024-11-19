@@ -15,7 +15,7 @@ class corridaController extends Controller
     public function index()
     {
         $dataView = [];
-        $dataView['corridas'] = corridas::orderBy('created_at','desc')->get();
+        $dataView['corridas'] = corridas::orderBy('created_at','desc')->paginate(10);
         $dataView['title'] = "Resultados";
 
         return view('corridas.index',[
@@ -83,7 +83,14 @@ class corridaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $corrida = corridas::where('id',$id)->update(['name' => $request->name]);
+        $corrida = corridas::where('id',$id)->update(
+            [
+                'name' => $request->name,
+                'exibir_tempo_liquido' => $request->exibir_tempo_liquido,
+                'exibir_gap' => $request->exibir_gap,
+                'exibir_tempo_bruto' => $request->exibir_tempo_bruto
+            ]
+        );
 
         if($corrida == 1){
             return redirect()->route('corridas.index')->with('msg',"Evento Alterado com Sucesso!");

@@ -42,7 +42,7 @@
                                 href="{{ route('corridas.show', ['corrida' => $corrida->id]) }}">{{ $corrida->name }}</a>
                         </td>
                         <td class="link-success text-center">
-                            {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $corrida->created_at)->format('d/m/Y') }}
+                            {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $corrida->created_at)->format('Y/m/d') }}
                         </td>
                         @if (Auth::user())
                             <td class="link-success text-center"><a class="btn btn-warning"
