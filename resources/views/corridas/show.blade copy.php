@@ -56,157 +56,151 @@
         </div>
     </div>
 
-    <style>
-        /* Classe para destacar as opções selecionadas */
-        .selected-option {
-            background-color: #d4edda; /* Exemplo de cor de fundo verde claro */
-            color: #155724; /* Texto em verde escuro */
-            font-weight: bold;
-        }
-    </style>
-
     <script>
-$(document).ready(function() {
-    let allData = []; // Armazena todos os dados iniciais da tabela
-    let selectedValues = []; // Armazena as linhas das categorias selecionadas
-    let selectedCategories = []; // Armazena as categorias selecionadas
+        $(document).ready(function() {
+            $('#myTable thead tr')
+                .clone(true)
+                .addClass('filters')
+                .appendTo('#myTable thead');
 
-    $('#myTable thead tr')
-        .clone(true)
-        .addClass('filters')
-        .appendTo('#myTable thead');
+            var table = $('#myTable').DataTable({
+                order: [
+                    [0, 'asc']
+                ],
+                "language": {
+                    "info": "",
+                    "paginate": {
+                        "previous": "Anterior",
+                        "next": "Próxima"
+                    }
+                },
+                orderCellsTop: true,
+                fixedHeader: true,
+                initComplete: function() {
+                    var api = this.api();
 
-    var table = $('#myTable').DataTable({
-        order: [
-            [0, 'asc']
-        ],
-        pageLength: 100, // Exibir mais registros por página, ajuste conforme necessário
-        "language": {
-            "info": "",
-            "paginate": {
-                "previous": "Anterior",
-                "next": "Próxima"
-            }
-        },
-        orderCellsTop: true,
-        fixedHeader: true,
-        initComplete: function() {
-            var api = this.api();
+                    // For each column
+                    api
+                        .columns()
+                        .eq(0)
+                        .each(function(colIdx) {
+                            // Set the header cell to contain the input element or select element for category
+                            var cell = $('.filters th').eq(
+                                $(api.column(colIdx).header()).index()
+                            );
 
-            // Armazena todos os dados da tabela no array `allData` para preservar o estado inicial
-            allData = api.rows().data().toArray();
-            console.log("Dados iniciais da tabela armazenados em allData:", allData);
+                            // Clear the content of the header cell
+                            $(cell).empty();
 
-            api.columns().eq(0).each(function(colIdx) {
-                var cell = $('.filters th').eq($(api.column(colIdx).header()).index());
-                $(cell).empty();
+                            if (colIdx === 0) { // Coluna de Rank
+                                // Create input element
+                                $(cell).html(
+                                    '<input type="text" class="form-control" placeholder="" />');
+                            } else if (colIdx === 3 || colIdx === 4 || colIdx ===
+                                5) { // Coluna de categoria
+                                // Create select element
+                                var select = $(
+                                        '<select class="form-control"><option value="">Todas</option></select>'
+                                    )
+                                    .appendTo(cell)
+                                    .on('change', function() {
+                                        var val = $.fn.dataTable.util.escapeRegex(
+                                            $(this).val()
+                                        );
 
-                if (colIdx === 3) { // Coluna de "Corrida" com filtro múltiplo
-                    var select = $('<select multiple class="form-control"><option value="">Todas</option></select>')
-                        .appendTo(cell)
-                        .on('change', function() {
-                            applyFilter(); // Atualiza a tabela com os valores selecionados
+                                        api.column(colIdx)
+                                            .search(val ? '^' + val + '$' : '', true, false)
+                                            .draw();
+
+                                        if (val !== '') {
+                                            reorderRankColumn();
+                                        }
+                                    });
+
+                                // Add options to select element
+                                api.column(colIdx).data().unique().sort().each(function(d) {
+                                    select.append('<option value="' + d + '">' + d +
+                                        '</option>');
+                                });
+                            } else {
+                                // Create input element
+                                $(cell).html(
+                                    '<input type="text" class="form-control" placeholder="" />');
+                            }
+
+                            // On every keypress/change in input/select
+                            $('input, select', $('.filters th').eq($(api.column(colIdx).header())
+                                    .index()))
+                                .off('keyup change')
+                                .on('keyup change', function(e) {
+                                    // Get the search value
+                                    $(this).attr('title', $(this).val());
+                                    var regexr = '({search})';
+
+                                    var cursorPosition = this.selectionStart;
+                                    // Search the column for that value
+                                    api
+                                        .column(colIdx)
+                                        .search(
+                                            this.value != '' ?
+                                            regexr.replace('{search}', '(((' + this.value +
+                                                ')))') :
+                                            '',
+                                            this.value != '',
+                                            this.value == ''
+                                        )
+                                        .draw();
+
+                                    if (colIdx === 3 || colIdx === 4 || colIdx === 5) {
+                                        resetTable();
+                                        reorderRankColumn();
+                                    }
+                                })
+                                .on('keyup', function(e) {
+                                    e.stopPropagation();
+
+                                    $(this).trigger('change');
+                                    $(this)
+                                        .focus()[0]
+                                        .setSelectionRange(cursorPosition, cursorPosition);
+                                });
                         });
 
-                    // Adiciona as opções ao select
-                    api.column(colIdx).data().unique().sort().each(function(d) {
-                        var option = $('<option value="' + d + '">' + d + '</option>');
-                        option.appendTo(select);
-                    });
 
-                    // Adiciona evento de clique nas opções do select múltiplo
-                    select.on('click', 'option', function() {
-                        const clickedValue = $(this).val();
+                    var api = this.api();
 
-                        if (selectedCategories.includes(clickedValue)) {
-                            // Remove a categoria e suas linhas correspondentes
-                            console.log(`Removendo categoria: ${clickedValue}`);
-                            selectedCategories = selectedCategories.filter(category => category !== clickedValue);
-                            selectedValues = selectedValues.filter(row => row[3] !== clickedValue);
-                            $(this).removeClass('selected-option');
-                        } else {
-                            // Adiciona a categoria e suas linhas correspondentes
-                            console.log(`Adicionando categoria: ${clickedValue}`);
-                            selectedCategories.push(clickedValue);
-                            allData.forEach(function(row) {
-                                if (row[3] === clickedValue) {
-                                    selectedValues.push(row);
-                                }
-                            });
-                            $(this).addClass('selected-option');
-                        }
+                    // Armazenar uma cópia dos dados originais da tabela
+                    var originalData = api.rows().data().toArray();
 
-                        console.log("Categorias selecionadas:", selectedCategories);
-                        console.log("Linhas atualmente armazenadas em selectedValues:", selectedValues);
+                    // Função para redefinir a tabela para os dados originais
+                    function resetTable() {
+                        // Limpar a tabela e adicionar os dados originais
+                        api.clear().rows.add(originalData).draw();
 
-                        recreateTable(); // Recria a tabela com os valores selecionados
-                    });
-                } else {
-                    // Cria um input para as outras colunas
-                    $(cell).html('<input type="text" class="form-control" placeholder="" />');
-                }
-
-                // Evento para todos os inputs e selects
-                $('input, select', $('.filters th').eq($(api.column(colIdx).header()).index()))
-                    .off('keyup change')
-                    .on('keyup change', function(e) {
-                        var regexr = '({search})';
-                        var cursorPosition = this.selectionStart;
-
-                        api.column(colIdx)
-                            .search(
-                                this.value != '' ?
-                                regexr.replace('{search}', '(((' + this.value + ')))') :
-                                '',
-                                this.value != '',
-                                this.value == ''
-                            )
-                            .draw();
-
-                        if (colIdx === 3) {
-                            recreateTable();
-                        }
-                    });
-            });
-
-            function recreateTable() {
-                // Destroi a tabela atual
-                table.destroy();
-                $('#myTable tbody').empty(); // Remove todas as linhas atuais da tabela
-
-                if (selectedCategories.length > 0) {
-                    console.log("Recriando tabela com selectedValues:", selectedValues);
-                    // Recria a tabela com as linhas acumuladas de selectedValues
-                    selectedValues.forEach(function(row) {
-                        $('#myTable tbody').append('<tr><td>' + row.join('</td><td>') + '</td></tr>');
-                    });
-                } else {
-                    console.log("Nenhuma categoria selecionada, restaurando estado inicial.");
-                    // Restaura a tabela com todos os dados iniciais
-                    allData.forEach(function(row) {
-                        $('#myTable tbody').append('<tr><td>' + row.join('</td><td>') + '</td></tr>');
-                    });
-                }
-
-                // Re-inicializa o DataTable
-                table = $('#myTable').DataTable({
-                    order: [
-                        [0, 'asc']
-                    ],
-                    pageLength: 100,
-                    "language": {
-                        "info": "",
-                        "paginate": {
-                            "previous": "Anterior",
-                            "next": "Próxima"
-                        }
+                        // Reordenar a coluna de rank numericamente
+                        reorderRankColumn();
                     }
-                });
-            }
-        }
-    });
-});
 
+
+                    function reorderRankColumn() {
+                        var table = $('#myTable').DataTable();
+                        var data = table.rows({
+                            search: 'applied'
+                        }).data().toArray(); // Get all filtered data
+                        var newData = [];
+
+                        // Update the rank values in the data array
+                        for (var i = 0; i < data.length; i++) {
+                            data[i][0] = i + 1; // Update the rank value
+                            newData.push(data[i]);
+                        }
+
+                        // Clear and add the updated data to the DataTable
+                        table.clear().rows.add(newData).draw();
+                    }
+
+                },
+            });
+        });
     </script>
-
 @endsection

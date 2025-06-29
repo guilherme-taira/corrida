@@ -13,67 +13,83 @@
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
-     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Bootstrap + seus estilos -->
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/forlife.css') }}" rel="stylesheet"> <!-- Se tiver CSS próprio -->
+
+ <style>
+
+    .main-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 40px; /* mais espaçamento lateral */
+        background: #444444;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .main-nav .logo {
+        margin-left: 40px; /* força a logo a ir mais para a direita */
+    }
+
+    .main-nav .logo img.logomarca {
+        height: 60px;
+    }
+
+    .main-nav .nav {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        gap: 30px;
+    }
+
+    .main-nav .nav li a {
+        text-decoration: none;
+        color: #ffffff;
+        font-weight: 500;
+        padding: 6px 12px;
+        border-radius: 4px;
+        transition: background 0.3s, color 0.3s;
+    }
+
+    .main-nav .nav li a:hover {
+        background: #ffffff;
+        color: #444444;
+    }
+
+    .menu-trigger {
+        display: none;
+    }
+</style>
 </head>
 <body>
+
+    <!-- NAV customizado da ForLife -->
+    <nav class="main-nav">
+        <!-- ***** Logo Start ***** -->
+        <a href="https://forlifesports.com.br" class="logo">
+            <img src="https://forlifesports.com.br/images/logo.png" class="logomarca" alt="ForLife Sports">
+        </a>
+        <!-- ***** Logo End ***** -->
+
+        <!-- ***** Menu Start ***** -->
+        <ul class="nav">
+            <li class="scroll-to-section"><a href="">Resultados</a></li>
+            <li class="scroll-to-section d-none"><a href="#about">Sobre Nós</a></li>
+        </ul>
+
+        <a class="menu-trigger">
+            <span>Menu</span>
+        </a>
+        <!-- ***** Menu End ***** -->
+    </nav>
+
+    <!-- Vue monta aqui -->
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <main class="py-4">
-            @yield('content')
-        </main>
+        @yield('content')
     </div>
+
+    @vite('resources/js/app.js')
 </body>
 </html>

@@ -25,4 +25,14 @@ export default defineConfig({
             vue: 'vue/dist/vue.esm-bundler.js',
         },
     },
+
+    // 👇 Adicione isso aqui
+    server: {
+        host: '0.0.0.0',               // Permite acesso de outros dispositivos na rede
+        port: 5173,                    // Porta padrão do Vite
+        strictPort: true,             // Impede que ele mude de porta se 5173 estiver ocupada
+        hmr: {
+            host: '192.168.1.7',      // IP do seu computador na rede local
+        },
+    },
 });

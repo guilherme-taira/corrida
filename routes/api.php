@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\getRacingController;
+use App\Http\Controllers\corridas\corridaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,5 +20,5 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function () {
 
     Route::get('sendData',[getRacingController::class,'storeOrUpdateRacing']);
-
+    Route::get('/corridas/{id}', [corridaController::class, 'show']);
 });

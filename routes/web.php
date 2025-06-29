@@ -19,13 +19,21 @@ use App\Http\Middleware\admin;
 */
 
 Route::get('/', [corridaController::class,'index'])->name('index');
+Route::post('/corridas/{corrida}/upload-atletas', [CorridaController::class, 'uploadAtletas'])->name('corridas.uploadAtletas');
 
 Route::resource('resultados', 'App\Http\Controllers\corridas\corridaController')->names('corridas')->parameters(['resultados' => 'corrida']);
+Route::get('/api/eventos', [corridaController::class, 'apiEventos']);
+Route::post('/corridas/{id}', [corridaController::class, 'update']); // para aceitar PUT via _method
 
 Route::middleware('admin')->group(function () {
     Route::get('edit/{id}',[corridaAuth::class,'edit'])->name('editar');
     Route::get('logoutOwn',[corridaAuth::class,'logout'])->name('sair');
 });
 
+
 Auth::routes();
 
+// ⬇️ Esse precisa ficar por último para funcionar com Vue Router
+Route::get('/{any}', function () {
+    return view('app'); // sua SPA Vue
+})->where('any', '^(?!api).*$'); // ignora rotas que começam com /api
