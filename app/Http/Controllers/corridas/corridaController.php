@@ -78,11 +78,59 @@ class corridaController extends Controller
         return redirect()->route('corridas.index');
     }
 
+
+    public function storeHandler(Request $request)
+    {
+        try {
+              $request->validate([
+            'name' => 'required|string|max:255',
+            'local' => 'nullable|string|max:255',
+            'cidade' => 'nullable|string|max:255',
+            'imagem' => 'nullable|image',
+            'banner' => 'nullable|image',
+            'certificado' => 'nullable|image',
+            'excel' => 'nullable|file|mimes:xlsx,xls',
+        ]);
+
+        $corrida = new corridas();
+        $corrida->name = $request->name;
+        $corrida->local = $request->local;
+        $corrida->cidade = $request->cidade;
+        $corrida->dados = $request->filled('dados') ? $request->input('dados') : '{}';
+        $corrida->exibir_tempo_liquido = $request->boolean('exibir_tempo_liquido');
+        $corrida->exibir_gap = $request->boolean('exibir_gap');
+        $corrida->exibir_tempo_bruto = $request->boolean('exibir_tempo_bruto');
+
+        // Uploads
+        if ($request->hasFile('imagem')) {
+            $corrida->imagem = $request->file('imagem')->store('eventos/imagens', 'public');
+        }
+
+        if ($request->hasFile('banner')) {
+            $corrida->banner = $request->file('banner')->store('eventos/banners', 'public');
+        }
+
+        if ($request->hasFile('certificado')) {
+            $corrida->certificado = $request->file('certificado')->store('eventos/certificados', 'public');
+        }
+
+        if ($request->hasFile('excel')) {
+            $corrida->excel = $request->file('excel')->store('eventos/excel', 'public');
+        }
+
+        $corrida->save();
+
+        return response()->json(['success' => true, 'message' => 'Corrida cadastrada com sucesso!']);
+        } catch (\Exception $th) {
+            Log::alert($th->getMessage());
+        }
+    }
+
     /**
      * Display the specified resource.
      */
-     public function show($id)
-    {
+     public function show($id){
+
         $corrida = corridas::findOrFail($id);
 
         return response()->json([

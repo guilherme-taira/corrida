@@ -3,8 +3,27 @@
         <v-container class="pa-6 fundo-escuro">
             <!-- Banner -->
             <v-img :src="bannerUrl" class="mb-6 rounded-lg elevation-3" />
-
             <!-- Abas -->
+            <v-row v-if="filtrosAtivos?.length" class="mb-2">
+                <v-col>
+                    <div class="text-caption text-black-1 mb-1">
+                        Filtros ativos:
+                    </div>
+                    <v-chip-group column>
+                        <v-chip
+                            v-for="(valor, index) in filtrosAtivos"
+                            :key="index"
+                            class="ma-1"
+                            color="primary"
+                            text-color="white"
+                            variant="flat"
+                            size="small"
+                        >
+                            {{ valor }}
+                        </v-chip>
+                    </v-chip-group>
+                </v-col>
+            </v-row>
             <v-tabs
                 v-model="abaSelecionada"
                 background-color="highlight"
@@ -22,14 +41,20 @@
                         class="d-flex justify-space-between align-center"
                     >
                         <span class="text-h6">Filtros Avançados</span>
-                        <v-btn icon @click="mostrarModalFiltro = false">
-                            <v-icon>mdi-close</v-icon>
+                        <v-btn
+                            color="primary"
+                            variant="tonal"
+                            prepend-icon="mdi-filter"
+                            @click="mostrarModalFiltro = false"
+                            class="text-white"
+                        >
+                            Filtrar
                         </v-btn>
                     </v-card-title>
 
                     <v-card-text>
                         <v-row dense>
-                            <!-- Filtros -->
+                            <!-- Filtros por categoria -->
                             <v-col cols="12" md="3">
                                 <v-select
                                     v-model="filtros.premiacao"
@@ -40,16 +65,19 @@
                                     prepend-icon="mdi-trophy"
                                 />
                             </v-col>
+
                             <v-col cols="12" md="3">
                                 <v-select
                                     v-model="filtros.modalidade"
-                                    :items="['Todos', ...opcoes.modalidade]"
+                                    :items="opcoes.modalidade"
+                                    multiple
                                     label="Modalidade"
                                     dense
                                     outlined
                                     prepend-icon="mdi-run"
                                 />
                             </v-col>
+
                             <v-col cols="12" md="3">
                                 <v-select
                                     v-model="filtros.sexo"
@@ -60,6 +88,7 @@
                                     prepend-icon="mdi-gender-male-female"
                                 />
                             </v-col>
+
                             <v-col cols="12" md="3">
                                 <v-select
                                     v-model="filtros.equipe"
@@ -71,7 +100,7 @@
                                 />
                             </v-col>
 
-                            <!-- Filtros por texto -->
+                            <!-- Filtros por nome e número -->
                             <v-col cols="12" md="6">
                                 <v-text-field
                                     v-model="filtros.nome"
@@ -82,10 +111,11 @@
                                     clearable
                                 />
                             </v-col>
+
                             <v-col cols="12" md="3">
                                 <v-text-field
                                     v-model="filtros.realbib"
-                                    label="Número de Peito"
+                                    label="Número do atleta"
                                     dense
                                     outlined
                                     prepend-icon="mdi-numeric"
@@ -93,6 +123,8 @@
                                     type="number"
                                 />
                             </v-col>
+
+                            <!-- Botão limpar -->
                             <v-col
                                 cols="12"
                                 md="3"
@@ -113,15 +145,16 @@
                 </v-card>
             </v-dialog>
 
-            <!-- Tabela com paginação -->
+            <!-- Tabela -->
             <v-data-table
                 :headers="headers"
                 :items="filtrados"
+                v-model:page="paginaAtual"
                 :items-per-page="10"
                 class="elevation-1 rounded-lg"
                 :show-select="false"
+                hide-default-footer
             >
-                <!-- Ícones da posição -->
                 <template v-slot:item.rank="{ item }">
                     <div class="text-center font-weight-bold">
                         <span v-if="item.rank == 1" class="text-warning"
@@ -141,12 +174,10 @@
                     </div>
                 </template>
 
-                <!-- Coluna número -->
                 <template v-slot:item.realbib="{ item }">
                     <div class="text-center">{{ item.realbib }}</div>
                 </template>
 
-                <!-- Coluna nome com clique -->
                 <template v-slot:item.nome="{ item }">
                     <span
                         class="text-primary font-weight-medium"
@@ -157,76 +188,48 @@
                     </span>
                 </template>
 
-                <!-- Coluna tempo -->
                 <template v-slot:item.time="{ item }">
                     <div class="text-center font-mono">{{ item.time }}</div>
                 </template>
-
-                <!-- Paginação numérica avançada -->
-                <template v-slot:bottom>
-                    <div
-                        class="d-flex justify-center align-center pa-4 flex-wrap gap-2"
-                    >
-                        <v-btn
-                            icon
-                            @click="paginaAtual--"
-                            :disabled="paginaAtual <= 1"
-                            size="small"
-                        >
-                            <v-icon>mdi-chevron-left</v-icon>
-                        </v-btn>
-
-                        <v-btn
-                            size="small"
-                            :variant="paginaAtual === 1 ? 'flat' : 'text'"
-                            color="primary"
-                            @click="paginaAtual = 1"
-                        >
-                            1
-                        </v-btn>
-
-                        <span v-if="paginaAtual > 4">…</span>
-
-                        <template
-                            v-for="p in rangePages(paginaAtual, pageCount)"
-                            :key="p"
-                        >
-                            <v-btn
-                                v-if="p !== 1 && p !== pageCount"
-                                size="small"
-                                :variant="paginaAtual === p ? 'flat' : 'text'"
-                                color="primary"
-                                @click="paginaAtual = p"
-                            >
-                                {{ p }}
-                            </v-btn>
-                        </template>
-
-                        <span v-if="paginaAtual < pageCount - 3">…</span>
-
-                        <v-btn
-                            v-if="pageCount > 1"
-                            size="small"
-                            :variant="
-                                paginaAtual === pageCount ? 'flat' : 'text'
-                            "
-                            color="primary"
-                            @click="paginaAtual = pageCount"
-                        >
-                            {{ pageCount }}
-                        </v-btn>
-
-                        <v-btn
-                            icon
-                            @click="paginaAtual++"
-                            :disabled="paginaAtual >= pageCount"
-                            size="small"
-                        >
-                            <v-icon>mdi-chevron-right</v-icon>
-                        </v-btn>
-                    </div>
-                </template>
             </v-data-table>
+            <!-- Paginação com 4 setas -->
+            <div class="d-flex justify-center align-center pa-4">
+                <v-btn
+                    icon
+                    @click="paginaAtual = 1"
+                    :disabled="paginaAtual === 1"
+                    size="small"
+                >
+                    <v-icon>mdi-page-first</v-icon>
+                </v-btn>
+
+                <v-btn
+                    icon
+                    @click="paginaAtual--"
+                    :disabled="paginaAtual === 1"
+                    size="small"
+                >
+                    <v-icon>mdi-chevron-left</v-icon>
+                </v-btn>
+
+                <v-btn
+                    icon
+                    @click="paginaAtual++"
+                    :disabled="paginaAtual === pageCount"
+                    size="small"
+                >
+                    <v-icon>mdi-chevron-right</v-icon>
+                </v-btn>
+
+                <v-btn
+                    icon
+                    @click="paginaAtual = pageCount"
+                    :disabled="paginaAtual === pageCount"
+                    size="small"
+                >
+                    <v-icon>mdi-page-last</v-icon>
+                </v-btn>
+            </div>
         </v-container>
 
         <!-- Botão flutuante de filtro -->
@@ -261,17 +264,18 @@ const mostrarModalFiltro = ref(false);
 
 // Filtros iniciais
 const filtros = ref({
-    premiacao: "Todos",
-    modalidade: "Todos",
-    sexo: "Todos",
-    equipe: "Todos",
+    premiacao: "Todos", // string
+    modalidade: [], // array (filtro múltiplo)
+    sexo: "Todos", // string
+    equipe: "Todos", // string
     nome: "",
     realbib: "",
 });
 
 // Cabeçalhos da tabela
 const headers = [
-    { title: "Posição", key: "rank", align: "center" },
+    { title: "Geral", key: "rank_geral", align: "center" },
+    { title: "Categoria", key: "rank_categoria", align: "center" },
     { title: "Número", key: "realbib", align: "center" },
     { title: "Nome", key: "nome", align: "start" },
     { title: "Tempo", key: "time", align: "center" },
@@ -281,13 +285,43 @@ const headers = [
 onMounted(async () => {
     try {
         const response = await axios.get(`/api/v1/corridas/${props.corridaId}`);
-        corredores.value = response.data.dados;
+        const lista = response.data.dados.map((c) => ({
+            ...c,
+            nome: `${c.firstname ?? ""} ${c.lastname ?? ""}`.trim(),
+        }));
+
+        // Ranking geral
+        const ordenadoGeral = [...lista].sort(
+            (a, b) => tempoSegundos(a.time) - tempoSegundos(b.time)
+        );
+        ordenadoGeral.forEach((c, i) => (c.rank_geral = i + 1));
+
+        // Ranking por categoria (sexo + distancia)
+        const categorias = {};
+        ordenadoGeral.forEach((c) => {
+            const chave = `${c.sex}-${c.category}`;
+            if (!categorias[chave]) categorias[chave] = [];
+            categorias[chave].push(c);
+        });
+        Object.values(categorias).forEach((lista) => {
+            lista.forEach((c, i) => (c.rank_categoria = i + 1));
+        });
+
+        corredores.value = ordenadoGeral;
         banner.value = response.data.banner;
-    } catch (error) {
-        console.error("Erro ao carregar corredores:", error);
+    } catch (e) {
         corredores.value = [];
     }
 });
+
+const paginaAtual = ref(1);
+const pageCount = computed(() => Math.ceil(filtrados.value.length / 10));
+
+function tempoSegundos(t) {
+    if (!t) return 999999;
+    const partes = t.split(":").map(Number);
+    return (partes[0] || 0) * 3600 + (partes[1] || 0) * 60 + (partes[2] || 0);
+}
 
 // Gera opções únicas para os selects
 const opcoes = computed(() => {
@@ -313,23 +347,30 @@ const opcoes = computed(() => {
     };
 });
 
-// Computa e filtra os dados + ordena se necessário
+// Filtragem e ranqueamento
 const filtrados = computed(() => {
     const lista = corredores.value
         .map((c) => ({
             ...c,
             nome: `${c.firstname ?? ""} ${c.lastname ?? ""}`.trim(),
         }))
-        .filter(
-            (c) =>
-                (filtros.value.premiacao === "Todos" ||
-                    c.race === filtros.value.premiacao) &&
-                (filtros.value.modalidade === "Todos" ||
-                    c.category === filtros.value.modalidade) &&
-                (filtros.value.sexo === "Todos" ||
-                    c.sex === filtros.value.sexo) &&
-                (filtros.value.equipe === "Todos" ||
-                    c.team === filtros.value.equipe)
+        .filter((c) =>
+            filtros.value.premiacao !== "Todos"
+                ? c.race === filtros.value.premiacao
+                : true
+        )
+        .filter((c) =>
+            filtros.value.modalidade.length
+                ? filtros.value.modalidade.includes(c.category)
+                : true
+        )
+        .filter((c) =>
+            filtros.value.sexo !== "Todos" ? c.sex === filtros.value.sexo : true
+        )
+        .filter((c) =>
+            filtros.value.equipe !== "Todos"
+                ? c.team === filtros.value.equipe
+                : true
         )
         .filter((c) =>
             filtros.value.nome
@@ -351,35 +392,48 @@ const filtrados = computed(() => {
                 : true
         );
 
-    // Verifica se algum filtro de categoria foi usado
-    const temFiltroDeCategoria =
-        filtros.value.premiacao !== "Todos" ||
-        filtros.value.modalidade !== "Todos" ||
-        filtros.value.sexo !== "Todos" ||
-        filtros.value.equipe !== "Todos";
+    // Ordena por tempo
+    lista.sort((a, b) => {
+        const tA = a.time?.split(":").map(Number) || [99, 99, 99];
+        const tB = b.time?.split(":").map(Number) || [99, 99, 99];
+        const segA = tA[0] * 3600 + tA[1] * 60 + tA[2];
+        const segB = tB[0] * 3600 + tB[1] * 60 + tB[2];
+        return segA - segB;
+    });
 
-    // Verifica se há busca por nome ou número
-    const temBusca = filtros.value.nome !== "" || filtros.value.realbib !== "";
-
-    // Só recalcula rank geral se NÃO houver filtros nem busca
-    if (!temFiltroDeCategoria && !temBusca) {
-        lista.sort((a, b) => {
-            const tA = a.time?.split(":").map(Number) || [99, 99, 99];
-            const tB = b.time?.split(":").map(Number) || [99, 99, 99];
-            const segA = tA[0] * 3600 + tA[1] * 60 + tA[2];
-            const segB = tB[0] * 3600 + tB[1] * 60 + tB[2];
-            return segA - segB;
-        });
-
-        lista.forEach((item, index) => {
-            item.rank = index + 1;
-        });
-    }
+    // Aplica ranking geral (pós filtro)
+    lista.forEach((item, index) => {
+        item.rank = index + 1;
+    });
 
     return lista;
 });
 
-// Redireciona para detalhes do atleta
+// Mostra chips com filtros ativos
+const filtrosAtivos = computed(() => {
+    const ativos = [];
+
+    if (filtros.value.premiacao !== "Todos")
+        ativos.push(`🏆 ${filtros.value.premiacao}`);
+
+    filtros.value.modalidade.forEach((m) => ativos.push(`🏁 ${m}`));
+
+    if (filtros.value.sexo !== "Todos")
+        ativos.push(
+            `⚧️ ${filtros.value.sexo === "F" ? "Feminino" : "Masculino"}`
+        );
+
+    if (filtros.value.equipe !== "Todos")
+        ativos.push(`👥 ${filtros.value.equipe}`);
+
+    if (filtros.value.nome) ativos.push(`🔍 Nome: ${filtros.value.nome}`);
+
+    if (filtros.value.realbib) ativos.push(`#️⃣ Nº: ${filtros.value.realbib}`);
+
+    return ativos;
+});
+
+// Detalhes do atleta
 function verDetalhes(atleta) {
     router.push({
         name: "atleta",
@@ -387,32 +441,17 @@ function verDetalhes(atleta) {
         state: {
             ...atleta,
             corrida: props.corridaId,
+            posicao_geral: atleta.rank_geral,
+            posicao_categoria: atleta.rank_categoria,
         },
     });
 }
 
-const paginaAtual = ref(1)
-
-const pageCount = computed(() => {
-  return Math.ceil(filtrados.value.length / 10)
-})
-
-function rangePages(current, total) {
-  const pages = []
-  const start = Math.max(2, current - 2)
-  const end = Math.min(total - 1, current + 2)
-
-  for (let i = start; i <= end; i++) {
-    pages.push(i)
-  }
-
-  return pages
-}
-// Reseta os filtros
+// Resetar filtros
 function limparFiltros() {
     filtros.value = {
         premiacao: "Todos",
-        modalidade: "Todos",
+        modalidade: [],
         sexo: "Todos",
         equipe: "Todos",
         nome: "",

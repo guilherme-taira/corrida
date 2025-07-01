@@ -6,8 +6,13 @@ import Eventos from './components/Eventos.vue'; // <-- Importa o novo componente
 import RankingTable from './components/RankingTable.vue';
 import AtletaDetalhe from './components/AtletaDetalhe.vue';
 import CorridaEdit from './components/CorridaEdit.vue';
+import CadastrarCorrida from './components/cadastrar.vue';
 
 const routes = [{
+        path: '/cadastrar-corrida',
+        name: 'CadastrarCorrida',
+        component: CadastrarCorrida,
+    }, {
         path: '/corridas/edit/:id',
         name: 'editar-corrida',
         component: CorridaEdit,
@@ -17,7 +22,9 @@ const routes = [{
         path: '/corridas/:id',
         name: 'corridaDetalhe',
         component: RankingTable,
-        props: route => ({ corridaId: route.params.id }) // Passa o ID como prop
+        props: route => ({
+            corridaId: route.params.id
+        }) // Passa o ID como prop
     },
     {
         path: '/',

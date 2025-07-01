@@ -3,18 +3,36 @@
         <v-container class="pt-10">
             <v-btn text @click="$router.back()">← Voltar</v-btn>
 
-            <v-row justify="center mt-2">
-                <v-col cols="6" md="2">
+            <v-row justify="center" class="mt-2">
+                <!-- Rank Geral -->
+                <v-col cols="12" md="3">
                     <v-card class="theme--dark primary py-0">
                         <v-card-text
                             class="text-center text-button py-0 white--text"
-                            >Geral</v-card-text
                         >
+                            Geral
+                        </v-card-text>
                         <v-card-subtitle
                             class="text-center text-h4 pa-0 white--text"
                         >
-                            <v-icon>mdi-seal</v-icon>
-                            {{ atleta.rank }}°
+                            <v-icon>mdi-seal</v-icon> {{ atleta.rank_geral }}°
+                        </v-card-subtitle>
+                    </v-card>
+                </v-col>
+
+                <!-- Rank Categoria -->
+                <v-col cols="12" md="3">
+                    <v-card class="theme--dark secondary py-0">
+                        <v-card-text
+                            class="text-center text-button py-0 white--text"
+                        >
+                            Categoria
+                        </v-card-text>
+                        <v-card-subtitle
+                            class="text-center text-h4 pa-0 white--text"
+                        >
+                            <v-icon>mdi-star</v-icon>
+                            {{ atleta.rank_categoria }}°
                         </v-card-subtitle>
                     </v-card>
                 </v-col>
@@ -114,7 +132,7 @@
             </v-row>
 
             <!-- Certificado -->
-            <div class="certificado mt-12" :style="certificadoStyle">
+            <div class="certificado mt-6" :style="certificadoStyle">
                 <div class="conteudo">
                     <h2>CERTIFICADO DE CONCLUSÃO DO ATLETA</h2>
                     <p class="evento">
@@ -164,7 +182,9 @@ const props = defineProps({
     atletaId: [String, Number],
     atleta: Object,
 });
-const atleta = ref(props.atleta || {});
+
+const atleta = ref(history.state || props.atleta || {});
+
 
 // URL do certificado dinâmico
 const certificadoUrl = ref("");
@@ -311,7 +331,7 @@ function calcularVelocidadeMedia(tempoStr, distanciaStr) {
 }
 /* Removemos o fundo escuro e aplicamos sombra nos textos */
 .certificado .conteudo {
-    padding: 30px;
+    padding: 0px;
     height: 100%;
     margin-top: 300px; /* Aumente para descer mais */
     text-align: center;
@@ -335,7 +355,7 @@ function calcularVelocidadeMedia(tempoStr, distanciaStr) {
     text-align: center;
     font-size: 26px;
     font-weight: bold;
-    margin-bottom: 30px;
+    margin-bottom: 5px;
 }
 
 .certificado .dados {
@@ -353,4 +373,6 @@ function calcularVelocidadeMedia(tempoStr, distanciaStr) {
     font-size: 14px;
     margin-top: 50px;
 }
+
+
 </style>

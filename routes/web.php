@@ -29,7 +29,7 @@ Route::middleware('admin')->group(function () {
     Route::get('edit/{id}',[corridaAuth::class,'edit'])->name('editar');
     Route::get('logoutOwn',[corridaAuth::class,'logout'])->name('sair');
 });
-
+;
 
 Auth::routes();
 

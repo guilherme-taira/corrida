@@ -21,4 +21,5 @@ Route::prefix('v1')->group(function () {
 
     Route::get('sendData',[getRacingController::class,'storeOrUpdateRacing']);
     Route::get('/corridas/{id}', [corridaController::class, 'show']);
+    Route::post('/cadastrar', [CorridaController::class, 'storeHandler']);
 });
