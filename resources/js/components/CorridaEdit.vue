@@ -115,13 +115,14 @@ const form = ref({
     exibir_tempo_liquido: false,
     exibir_gap: false,
     exibir_tempo_bruto: false,
+    isLive: false, // <-- importante!
     imagem: null,
     banner: null,
     certificado: null,
     imagemAtual: null,
     bannerAtual: null,
     certificadoAtual: null,
-    excel: null, // ✅ novo campo para o arquivo Excel
+    excel: null,
 });
 
 onMounted(() => {
@@ -134,16 +135,18 @@ onMounted(() => {
             exibir_tempo_liquido: !!data.exibir_tempo_liquido,
             exibir_gap: !!data.exibir_gap,
             exibir_tempo_bruto: !!data.exibir_tempo_bruto,
+            isLive: !!data.isLive, // ✅ popular o campo
             imagem: null,
             banner: null,
             certificado: null,
             imagemAtual: data.imagem,
             bannerAtual: data.banner,
             certificadoAtual: data.certificado,
-            excel: null, // ✅ reset do campo
+            excel: null,
         };
     });
 });
+
 
 function salvarEdicao() {
     const data = new FormData();
@@ -156,6 +159,7 @@ function salvarEdicao() {
     data.append("exibir_tempo_bruto", form.value.exibir_tempo_bruto ? 1 : 0);
     data.append("local", form.value.local);
     data.append("cidade", form.value.cidade);
+    data.append("isLive", form.value.isLive ? 1 : 0);
 
     if (form.value.imagem) data.append("imagem", form.value.imagem);
     if (form.value.banner) data.append("banner", form.value.banner);

@@ -133,7 +133,7 @@
             <!-- Certificado -->
             <div class="certificado mt-6" :style="certificadoStyle">
                 <div class="conteudo">
-                    <h5>CERTIFICADO DE CONCLUSÃO DO ATLETA</h5>
+                 <h5>CERTIFICADO DE CONCLUSÃO DO ATLETA</h5>
                     <p class="evento">
                         {{ atleta.race }} - {{ atleta.category }}
                     </p>
@@ -310,6 +310,7 @@ function calcularVelocidadeMedia(tempoStr, distanciaStr) {
     return `${velocidade.toFixed(2)} km/h`;
 }
 </script>
+
 <style scoped>
 .certificado {
     width: 100%;
@@ -325,10 +326,10 @@ function calcularVelocidadeMedia(tempoStr, distanciaStr) {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    height: 1125px;
+    height: 1125px; /* altura para desktop */
 }
 
-/* Desktop */
+/* Estilo padrão (desktop) */
 .certificado .conteudo {
     padding: 0px;
     height: 100%;
@@ -336,61 +337,18 @@ function calcularVelocidadeMedia(tempoStr, distanciaStr) {
     text-align: center;
 }
 
-.certificado h5 {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.certificado .evento {
-    font-size: 20px;
-}
-
-.certificado .nome {
-    font-size: 32px;
-    font-weight: bold;
-}
-
-.certificado .dados {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px;
-    font-size: 20px;
-    margin-bottom: 10px;
-    text-shadow: 4px 3px 3px rgba(0, 0, 0, 0.8);
-}
-
-.certificado .dados > div {
-    margin-bottom: 12px;
-}
-
-.certificado .assinaturas {
-    display: flex;
-    justify-content: space-between;
-    font-size: 16px;
-}
-
-/* Celular */
+/* Estilo específico para celular (até 600px) */
 @media (max-width: 600px) {
     .certificado {
         height: auto;
-        aspect-ratio: 1136 / 1600;
+        aspect-ratio: 1136 / 1600; /* mantém a proporção da imagem no celular */
         padding: 20px;
-        margin: 10px auto;
+        margin: 20px auto;
     }
 
     .certificado .conteudo {
-        margin-top: 120px;
-        height: auto;
+        margin-top: 120px; /* ajuste para o conteúdo descer */
         text-align: center;
-    }
-
-    .certificado h5 {
-        font-size: 14px;
-        padding: 3px;
-    }
-
-    .certificado .evento {
-        font-size: 12px;
     }
 
     .certificado .nome {
@@ -399,12 +357,17 @@ function calcularVelocidadeMedia(tempoStr, distanciaStr) {
 
     .certificado .dados {
         font-size: 11px;
-        gap: 1px;
+        gap: 6px;
     }
 
-    .certificado .assinaturas {
-        font-size: 12px;
-    }
+    .certificado h5 {
+       font-size: 14px;
+       padding: 5px;
+}
+}
+
+.certificado .conteudo {
+       text-align: center;
 }
 
 .certificado h5,
@@ -413,5 +376,36 @@ function calcularVelocidadeMedia(tempoStr, distanciaStr) {
 .certificado .dados,
 .certificado .assinaturas {
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+
+
+
+.certificado .evento {
+    text-align: center;
+    font-size: 12px;
+    margin-top: -10px;
+}
+
+.certificado .nome {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+        margin-top: -15px;
+}
+
+.certificado .dados {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    font-size: 12px;
+    margin-bottom: 10px;
+    text-shadow: 4px 3px 3px rgba(0, 0, 0, 0.8); /* Para manter legível */
+}
+
+.certificado .assinaturas {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
 }
 </style>

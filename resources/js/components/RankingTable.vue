@@ -123,20 +123,16 @@
                             >
                                 <v-btn
                                     color="primary"
-                                    variant="tonal"
                                     prepend-icon="mdi-filter"
                                     @click="mostrarModalFiltro = false"
-                                    class="text-white"
                                 >
                                     Filtrar
                                 </v-btn>
 
                                 <v-btn
                                     color="primary"
-                                    variant="tonal"
                                     prepend-icon="mdi-filter-remove"
                                     @click="limparFiltros"
-                                    class="text-white"
                                 >
                                     Limpar
                                 </v-btn>

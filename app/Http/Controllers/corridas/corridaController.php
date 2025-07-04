@@ -87,6 +87,7 @@ class corridaController extends Controller
             'local' => 'nullable|string|max:255',
             'cidade' => 'nullable|string|max:255',
             'imagem' => 'nullable|image',
+            'isLive' => 'nullable|boolean',
             'banner' => 'nullable|image',
             'certificado' => 'nullable|image',
             'excel' => 'nullable|file|mimes:xlsx,xls',
@@ -96,6 +97,7 @@ class corridaController extends Controller
         $corrida->name = $request->name;
         $corrida->local = $request->local;
         $corrida->cidade = $request->cidade;
+        $corrida->isLive = $request->isLive;
         $corrida->dados = $request->filled('dados') ? $request->input('dados') : '{}';
         $corrida->exibir_tempo_liquido = $request->boolean('exibir_tempo_liquido');
         $corrida->exibir_gap = $request->boolean('exibir_gap');
@@ -103,15 +105,15 @@ class corridaController extends Controller
 
         // Uploads
         if ($request->hasFile('imagem')) {
-            $corrida->imagem = $request->file('imagem')->store('eventos/imagens', 'public');
+            $corrida->imagem = $request->file('imagem')->store('corridas/imagens', 'public');
         }
 
         if ($request->hasFile('banner')) {
-            $corrida->banner = $request->file('banner')->store('eventos/banners', 'public');
+            $corrida->banner = $request->file('banner')->store('corridas/banners', 'public');
         }
 
         if ($request->hasFile('certificado')) {
-            $corrida->certificado = $request->file('certificado')->store('eventos/certificados', 'public');
+            $corrida->certificado = $request->file('certificado')->store('corridas/certificados', 'public');
         }
 
         if ($request->hasFile('excel')) {
@@ -132,7 +134,6 @@ class corridaController extends Controller
      public function show($id){
 
         $corrida = corridas::findOrFail($id);
-
         return response()->json([
             'id' => $corrida->id,
             'name' => $corrida->name,
@@ -140,7 +141,8 @@ class corridaController extends Controller
             'banner' => $corrida->banner,
             'certificado' => $corrida->certificado,
             'cidade' => $corrida->cidade,
-            'local' => $corrida->local
+            'local' => $corrida->local,
+            'isLive' => $corrida->isLive
         ]);
 
     }
@@ -154,12 +156,19 @@ class corridaController extends Controller
      */
 public function update(Request $request, string $id)
 {
+    Log::alert($request->all());
     $corrida = corridas::findOrFail($id);
+
+     // Se o isLive vier como true, desativa todas as outras
+    if ($request->boolean('isLive')) {
+        corridas::where('id', '!=', $id)->update(['isLive' => false]);
+    }
 
     // Atualiza os campos principais
     $corrida->name = $request->name;
     $corrida->local = $request->local;
     $corrida->cidade = $request->cidade;
+    $corrida->isLive = $request->isLive;
     $corrida->exibir_tempo_liquido = $request->exibir_tempo_liquido;
     $corrida->exibir_gap = $request->exibir_gap;
     $corrida->exibir_tempo_bruto = $request->exibir_tempo_bruto;

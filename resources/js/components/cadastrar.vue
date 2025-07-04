@@ -34,6 +34,7 @@
                         label="Exibir Tempo Bruto"
                         v-model="form.exibir_tempo_bruto"
                     />
+                    <v-switch label="Corrida está ao vivo?" v-model="form.isLive" />
 
                     <v-file-input
                         label="Imagem do Evento"
@@ -82,6 +83,7 @@ export default {
                 exibir_tempo_liquido: false,
                 exibir_gap: false,
                 exibir_tempo_bruto: false,
+                isLive: false, // <-- importante!
                 imagem: null,
                 banner: null,
                 certificado: null,
