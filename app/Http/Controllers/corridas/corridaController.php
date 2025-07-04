@@ -122,6 +122,11 @@ class corridaController extends Controller
 
         $corrida->save();
 
+        // Se o isLive vier como true, desativa todas as outras
+        if ($corrida->isLive) {
+            corridas::where('id', '!=', $corrida->id)->update(['isLive' => false]);
+        }
+
         return response()->json(['success' => true, 'message' => 'Corrida cadastrada com sucesso!']);
         } catch (\Exception $th) {
             Log::alert($th->getMessage());
