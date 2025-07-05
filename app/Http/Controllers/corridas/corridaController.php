@@ -147,7 +147,8 @@ class corridaController extends Controller
             'certificado' => $corrida->certificado,
             'cidade' => $corrida->cidade,
             'local' => $corrida->local,
-            'isLive' => $corrida->isLive
+            'isLive' => $corrida->isLive,
+            'atletas' => $corrida->atletas
         ]);
 
     }
