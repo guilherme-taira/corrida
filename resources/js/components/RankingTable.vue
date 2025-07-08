@@ -126,6 +126,13 @@
                                 md="6"
                                 class="d-flex justify-end align-end gap-2 flex-wrap"
                             >
+                            <v-btn
+                                    color="primary"
+                                    prepend-icon="mdi-filter-remove"
+                                    @click="limparFiltros"
+                                >
+                                    Limpar
+                                </v-btn>
                                 <v-btn
                                     color="primary"
                                     prepend-icon="mdi-filter"
@@ -133,13 +140,7 @@
                                 >
                                     Filtrar
                                 </v-btn>
-                                <v-btn
-                                    color="primary"
-                                    prepend-icon="mdi-filter-remove"
-                                    @click="limparFiltros"
-                                >
-                                    Limpar
-                                </v-btn>
+
                             </v-col>
                         </v-row>
                     </v-card-text>
