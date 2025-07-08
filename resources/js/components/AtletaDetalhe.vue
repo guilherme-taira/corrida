@@ -153,11 +153,11 @@
                             <strong>Colocação Geral:</strong> {{ atleta.rank }}º
                         </div>
                         <div>
-                            <strong>Tempo Bruto:</strong> {{ atleta.time }}
+                            <strong>Tempo Bruto:</strong> {{ atleta.chiptime }}
                         </div>
                         <div>
                             <strong>Tempo Líquido:</strong>
-                            {{ atleta.chiptime }}
+                            {{ atleta.time }}
                         </div>
                     </div>
                 </div>
@@ -226,8 +226,8 @@ const tempos = computed(() => {
     const distancia = atleta.value.race;
 
     return {
-        "Tempo Líquido": { valor: atleta.value.chiptime, icon: "mdi-timer" },
-        "Tempo Bruto": { valor: tempoBruto, icon: "mdi-timer-outline" },
+        "Tempo Líquido": { valor: tempoBruto, icon: "mdi-timer" },
+        "Tempo Bruto": { valor: atleta.value.chiptime, icon: "mdi-timer-outline" },
         Pace: {
             valor: calcularPace(tempoBruto, distancia),
             icon: "mdi-chart-bar",

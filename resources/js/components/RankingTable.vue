@@ -369,13 +369,13 @@ onMounted(async () => {
             : JSON.parse(response.data.atletas || "[]");
 
         atletas.value.forEach((a) => {
-            a.nome = `${a.firstname ?? ""} ${a.lastname ?? ""}`.trim();
+            a.nome = `${a.lastname ?? ""} ${a.firstname ?? ""}`.trim();
         });
 
         // Premiação
         const lista = response.data.dados.map((c) => ({
             ...c,
-            nome: `${c.firstname ?? ""} ${c.lastname ?? ""}`.trim(),
+            nome: `${c.lastname ?? ""} ${c.firstname ?? ""}`.trim(),
         }));
 
         const ordenadoGeral = [...lista].sort(
@@ -413,7 +413,7 @@ const filtrados = computed(() => {
     const lista = corredores.value
         .map((c) => ({
             ...c,
-            nome: `${c.firstname ?? ""} ${c.lastname ?? ""}`.trim(),
+            nome: `${c.lastname ?? ""} ${c.firstname ?? ""}`.trim(),
         }))
         .filter((c) =>
             filtros.value.premiacao !== "Todos"
@@ -464,7 +464,7 @@ const atletasFiltrados = computed(() => {
     return atletas.value
         .map((a) => ({
             ...a,
-            nome: `${a.firstname ?? ""} ${a.lastname ?? ""}`.trim(),
+            nome: `${a.lastname ?? ""} ${a.firstname ?? ""}`.trim(),
         }))
         .filter((a) =>
             filtros.value.premiacao !== "Todos"
