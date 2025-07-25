@@ -134,9 +134,6 @@
             <div class="certificado mt-6" :style="certificadoStyle">
                 <div class="conteudo">
                     <h5>CERTIFICADO DE CONCLUSÃO DO ATLETA</h5>
-                    <p class="evento">
-                        {{ atleta.race }} - {{ atleta.category }}
-                    </p>
                     <p class="nome">
                         {{ atleta.firstname }} {{ atleta.lastname }}
                     </p>
@@ -150,7 +147,10 @@
                             <strong>Categoria:</strong> {{ atleta.category }}
                         </div>
                         <div>
-                            <strong>Colocação Geral:</strong> {{ atleta.rank }}º
+                            <strong>Colocação Geral:</strong> {{ atleta.rank_geral }}º
+                        </div>
+                          <div>
+                            <strong>Colocação Categoria:</strong> {{ atleta.rank_categoria }}º
                         </div>
                         <div>
                             <strong>Tempo Bruto:</strong> {{ atleta.chiptime }}
