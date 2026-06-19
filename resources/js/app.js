@@ -7,6 +7,7 @@ import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import '@mdi/font/css/materialdesignicons.css'
+import VueApexCharts from "vue3-apexcharts";
 
 import router from './router'; // importa o roteador
 
@@ -28,6 +29,7 @@ import Eventos from './components/Eventos.vue';
 app.component('eventos', Eventos);
 app.component('example-component', ExampleComponent);
 app.component('ranking-table', RankingTable);
+app.component("apexchart", VueApexCharts);
 
 // Use Vuetify e Vue Router
 app.use(vuetify);

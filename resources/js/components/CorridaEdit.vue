@@ -62,7 +62,10 @@
                         show-size
                     />
 
-                    <v-switch label="Corrida está ao vivo?" v-model="form.isLive" />
+                    <v-switch
+                        label="Corrida está ao vivo?"
+                        v-model="form.isLive"
+                    />
 
                     <!-- Mostrar certificado atual -->
                     <div v-if="form.certificadoAtual" class="mt-3">
@@ -86,6 +89,28 @@
                         label="Importar Atletas (Excel)"
                         accept=".xlsx, .xls"
                         v-model="form.excel"
+                        show-size
+                        class="mt-4"
+                    />
+
+                    <div v-if="form.excelDadosAtual" class="mt-3">
+                        <strong>Arquivo de Dados Atual:</strong>
+
+                        <div class="mt-2">
+                            <v-btn color="success" :to="`/excel/${id}`">
+                                Visualizar Dados
+                            </v-btn>
+                        </div>
+                    </div>
+
+                    <v-file-input
+                        :label="
+                            form.excelDadosAtual
+                                ? `${form.excelDadosAtual.split('/').pop()}`
+                                : 'Importar Dados (Excel)'
+                        "
+                        accept=".xlsx,.xls"
+                        v-model="form.excelDados"
                         show-size
                         class="mt-4"
                     />
@@ -123,6 +148,7 @@ const form = ref({
     bannerAtual: null,
     certificadoAtual: null,
     excel: null,
+    excelDados: null,
 });
 
 onMounted(() => {
@@ -143,17 +169,17 @@ onMounted(() => {
             bannerAtual: data.banner,
             certificadoAtual: data.certificado,
             excel: null,
+            excelDadosAtual: data.arquivo_dados_excel,
         };
     });
 });
-
 
 function salvarEdicao() {
     const data = new FormData();
     data.append("name", form.value.name);
     data.append(
         "exibir_tempo_liquido",
-        form.value.exibir_tempo_liquido ? 1 : 0
+        form.value.exibir_tempo_liquido ? 1 : 0,
     );
     data.append("exibir_gap", form.value.exibir_gap ? 1 : 0);
     data.append("exibir_tempo_bruto", form.value.exibir_tempo_bruto ? 1 : 0);
@@ -166,7 +192,8 @@ function salvarEdicao() {
     if (form.value.certificado)
         data.append("certificado", form.value.certificado);
     if (form.value.excel) data.append("arquivo_excel", form.value.excel); // ✅ anexa o Excel
-
+    if (form.value.excelDados)
+        data.append("arquivo_dados_excel", form.value.excelDados);
     axios
         .post(`/resultados/${id}?_method=PUT`, data)
         .then(() => {

@@ -374,10 +374,14 @@ onMounted(async () => {
         });
 
         // Premiação
-        const lista = response.data.dados.map((c) => ({
-            ...c,
-            nome: `${c.lastname ?? ""} ${c.firstname ?? ""}`.trim(),
-        }));
+        const lista = response.data.dados.map((c) => {
+            const copia = { ...c };
+            delete copia.splits;
+            return {
+                ...copia,
+                nome: `${c.lastname ?? ""} ${c.firstname ?? ""}`.trim(),
+            };
+        });
 
         const ordenadoGeral = [...lista].sort(
             (a, b) => tempoSegundos(a.time) - tempoSegundos(b.time)

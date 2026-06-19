@@ -7,16 +7,26 @@ import RankingTable from './components/RankingTable.vue';
 import AtletaDetalhe from './components/AtletaDetalhe.vue';
 import CorridaEdit from './components/CorridaEdit.vue';
 import CadastrarCorrida from './components/cadastrar.vue';
+import ExcelViewer from './components/ExcelViewer.vue';
+import AdminEventos from './components/AdminEventos.vue'
 
 const routes = [{
         path: '/cadastrar-corrida',
         name: 'CadastrarCorrida',
         component: CadastrarCorrida,
     }, {
+        path: '/admin/eventos',
+        name: 'admin-eventos',
+        component: AdminEventos
+    }, {
         path: '/corridas/edit/:id',
         name: 'editar-corrida',
         component: CorridaEdit,
         props: true
+    },
+    {
+        path: "/excel/:id",
+        component: ExcelViewer
     },
     {
         path: '/corridas/:id',

@@ -47,7 +47,7 @@
 
                         <!-- Nome -->
                         <v-card-text class="text-h5 primary--text py-1">
-                            {{ atleta.firstname }} {{ atleta.lastname }}
+                            {{ atleta.lastname }} {{ atleta.firstname }}
                         </v-card-text>
 
                         <!-- Equipe -->
@@ -135,7 +135,7 @@
                 <div class="conteudo">
                     <h5>CERTIFICADO DE CONCLUSÃO DO ATLETA</h5>
                     <p class="nome">
-                        {{ atleta.firstname }} {{ atleta.lastname }}
+                        {{ atleta.lastname }} {{ atleta.firstname }}
                     </p>
 
                     <div class="dados">

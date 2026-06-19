@@ -23,7 +23,10 @@ Route::post('/corridas/{corrida}/upload-atletas', [CorridaController::class, 'up
 
 Route::resource('resultados', 'App\Http\Controllers\corridas\corridaController')->names('corridas')->parameters(['resultados' => 'corrida']);
 Route::get('/api/eventos', [corridaController::class, 'apiEventos']);
+Route::get('/editareventos', [corridaController::class, 'editareventos']);
 Route::post('/corridas/{id}', [corridaController::class, 'update']); // para aceitar PUT via _method
+Route::get('/api/excel/{id}', [corridaController::class, 'visualizarExcel']);
+Route::post('/uniforme/entregar', [corridaController::class, 'entregarUniforme']);
 
 Route::middleware('admin')->group(function () {
     Route::get('edit/{id}',[corridaAuth::class,'edit'])->name('editar');
