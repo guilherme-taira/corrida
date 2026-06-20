@@ -1,4 +1,4 @@
-<template>
+'<template>
     <v-container fluid class="page-wrapper">
         <v-card elevation="2">
             <v-card-title class="dashboard-title">
@@ -187,44 +187,45 @@ const filtroModalidade = ref(null);
 const filtroCpf = ref("");
 const dialogEntrega = ref(false);
 const atletaSelecionado = ref(null);
+async function carregarDados() {
 
-onMounted(async () => {
-    const { data } = await axios.get(`/api/excel/${route.params.id}`);
+    const { data } = await axios.get(
+        `/api/excel/${route.params.id}`
+    );
 
     const headersOriginais = data.headers;
 
-    // Oculta CHIP
     const indicesOcultos = [1];
 
     headers.value = headersOriginais
-        .filter((_, index) => !indicesOcultos.includes(index))
-        .map((col) => ({
+        .filter((col, index) =>
+            !indicesOcultos.includes(index) &&
+            col !== "UNIFORM_ENTREGUE"
+        )
+        .map(col => ({
             title: col,
             key: col,
             sortable: true,
         }));
 
-        headers.value = headersOriginais
-    .filter((col, index) =>
-        !indicesOcultos.includes(index) &&
-        col !== "UNIFORM_ENTREGUE"
-    )
-    .map(col => ({
-        title: col,
-        key: col,
-        sortable: true,
-    }));
+    const indiceNum = headers.value.findIndex(
+        h => h.key === "NUM"
+    );
 
-    headers.value.push({
+    headers.value.splice(indiceNum + 1, 0, {
         title: "KITS",
         key: "uniforme",
         sortable: false,
+        width: "90px",
+        align: "center",
     });
 
-    items.value = data.rows.map((row) => {
+    items.value = data.rows.map(row => {
+
         const obj = {};
 
         headersOriginais.forEach((header, index) => {
+
             if (indicesOcultos.includes(index)) {
                 return;
             }
@@ -234,7 +235,18 @@ onMounted(async () => {
 
         return obj;
     });
+}
+
+onMounted(() => {
+
+    carregarDados();
+
+    setInterval(() => {
+        carregarDados();
+    }, 5000);
+
 });
+
 function abrirEntrega(item) {
     if (item.UNIFORM_ENTREGUE) {
         return;
@@ -250,7 +262,7 @@ async function confirmarEntrega() {
 
         await axios.post("/uniforme/entregar", {
             corrida_id: route.params.id,
-            cpf: atletaSelecionado.value.CPF
+            cpf: atletaSelecionado.value.NUM
         });
 
         dialogEntrega.value = false;
@@ -405,3 +417,4 @@ const totalEquipes = computed(
 
 
 
+'

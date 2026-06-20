@@ -43,25 +43,26 @@ class corridaController extends Controller
     ]);
 }
 
-
 public function entregarUniforme(Request $request)
 {
-    $registro = EntregaUniforme::updateOrCreate(
+    $entrega = EntregaUniforme::updateOrCreate(
         [
             'corrida_id' => $request->corrida_id,
             'cpf' => $request->cpf
         ],
         [
-            'entregue_em' => now()
+            'entregue' => true
         ]
     );
+
+    Log::alert($entrega);
 
     return response()->json([
         'success' => true
     ]);
 }
 
-   public function visualizarExcel($id)
+public function visualizarExcel($id)
 {
     $corrida = corridas::findOrFail($id);
 
@@ -83,7 +84,7 @@ public function entregarUniforme(Request $request)
 
     $headers = array_shift($rows);
 
-    // Busca todos os CPFs já entregues
+    // Busca todos os NUM já entregues
     $entregues = EntregaUniforme::where(
         'corrida_id',
         $id
@@ -91,14 +92,14 @@ public function entregarUniforme(Request $request)
     ->pluck('cpf')
     ->toArray();
 
-    // Descobre qual coluna é CPF
-    $cpfIndex = array_search('CPF', $headers);
+    // Descobre qual coluna é NUM
+    $numIndex = array_search('NUM', $headers);
 
     foreach ($rows as &$row) {
 
-        $cpf = $row[$cpfIndex] ?? null;
+        $num = $row[$numIndex] ?? null;
 
-        $row[] = in_array($cpf, $entregues);
+        $row[] = in_array($num, $entregues);
     }
 
     unset($row);
@@ -110,9 +111,7 @@ public function entregarUniforme(Request $request)
         'headers' => $headers,
         'rows' => $rows
     ]);
-}
-
-    /**
+}    /**
      * Show the form for creating a new resource.
      */
     public function create()
