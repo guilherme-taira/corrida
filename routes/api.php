@@ -19,7 +19,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
 
+    Route::get('/eventos-online', [corridaController::class, 'eventosOnline']);
+    Route::post('/importar-evento', [corridaController::class, 'importarEvento']);
+
     Route::get('sendData',[getRacingController::class,'storeOrUpdateRacing']);
     Route::get('/corridas/{id}', [corridaController::class, 'show']);
-    Route::post('/cadastrar', [CorridaController::class, 'storeHandler']);
+    Route::post('/cadastrar', [corridaController::class, 'storeHandler']);
+
 });

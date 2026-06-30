@@ -43,6 +43,18 @@ return [
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
+        'mysql_online' => [
+            'driver' => 'mysql',
+            'host' => env('ONLINE_DB_HOST'),
+            'port' => env('ONLINE_DB_PORT'),
+            'database' => env('ONLINE_DB_DATABASE'),
+            'username' => env('ONLINE_DB_USERNAME'),
+            'password' => env('ONLINE_DB_PASSWORD'),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+        ],
+
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),

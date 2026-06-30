@@ -1,4 +1,5 @@
-'<template>
+'
+<template>
     <v-container fluid class="page-wrapper">
         <v-card elevation="2">
             <v-card-title class="dashboard-title">
@@ -7,7 +8,7 @@
             <v-card-text>
                 <!-- KPIs -->
                 <v-row class="mb-4">
-                    <v-col cols="12" md="3">
+                    <v-col cols="12" md="2">
                         <v-card class="kpi-card kpi-total">
                             <v-card-title>{{
                                 totalParticipantes
@@ -16,28 +17,45 @@
                         </v-card>
                     </v-col>
 
-                    <v-col cols="12" md="3">
+                    <v-col cols="12" md="2">
                         <v-card class="kpi-card kpi-masc">
                             <v-card-title>{{ totalMasculino }}</v-card-title>
                             <v-card-subtitle>Masculino</v-card-subtitle>
                         </v-card>
                     </v-col>
 
-                    <v-col cols="12" md="3">
+                    <v-col cols="12" md="2">
                         <v-card class="kpi-card kpi-fem">
                             <v-card-title>{{ totalFeminino }}</v-card-title>
                             <v-card-subtitle>Feminino</v-card-subtitle>
                         </v-card>
                     </v-col>
 
-                    <v-col cols="12" md="3">
+                    <v-col cols="12" md="2">
                         <v-card class="kpi-card kpi-equipes">
                             <v-card-title>{{ totalEquipes }}</v-card-title>
                             <v-card-subtitle>Equipes</v-card-subtitle>
                         </v-card>
                     </v-col>
-                </v-row>
 
+                    <v-col cols="12" md="2">
+                        <v-card class="kpi-card kpi-entregues">
+                            <v-card-title>{{
+                                totalKitsEntregues
+                            }}</v-card-title>
+                            <v-card-subtitle>Kits Entregues</v-card-subtitle>
+                        </v-card>
+                    </v-col>
+
+                    <v-col cols="12" md="2">
+                        <v-card class="kpi-card kpi-pendentes">
+                            <v-card-title>{{
+                                totalKitsPendentes
+                            }}</v-card-title>
+                            <v-card-subtitle>Pendentes</v-card-subtitle>
+                        </v-card>
+                    </v-col>
+                </v-row>
                 <!-- Filtros -->
                 <v-card class="filtro-card">
                     <v-row>
@@ -102,7 +120,7 @@
                     :search="search"
                     fixed-header
                     height="700"
-                    density="comfortable"
+                    density="compact"
                     :items-per-page="50"
                 >
                     <template #item.uniforme="{ item }">
@@ -110,62 +128,65 @@
                             :model-value="item.UNIFORM_ENTREGUE"
                             color="success"
                             hide-details
-                            @click="abrirEntrega(item)"
+                            @click.prevent="abrirEntrega(item)"
                         />
                     </template>
                 </v-data-table>
             </v-card-text>
         </v-card>
 
-        <v-dialog
-    v-model="dialogEntrega"
-    max-width="500"
->
-    <v-card>
+        <v-dialog v-model="dialogEntrega" max-width="500">
+            <v-card>
+                <v-card-title> Confirmar Entrega </v-card-title>
 
-        <v-card-title>
-            Confirmar Entrega
-        </v-card-title>
+                <v-card-text v-if="atletaSelecionado">
+                    <p class="mb-3">Deseja registrar a entrega deste kit?</p>
 
-        <v-card-text>
+                    <v-list>
+                        <v-list-item>
+                            <strong>Número:</strong>&nbsp;{{
+                                atletaSelecionado.NUM
+                            }}
+                        </v-list-item>
 
-            Deseja registrar a entrega do uniforme para:
+                        <v-list-item>
+                            <strong>Nome:</strong>&nbsp;{{
+                                atletaSelecionado.NOME
+                            }}
+                        </v-list-item>
 
-            <br><br>
+                        <v-list-item>
+                            <strong>Modalidade:</strong>&nbsp;{{
+                                atletaSelecionado.MOD
+                            }}
+                        </v-list-item>
 
-            <strong>
-                {{ atletaSelecionado?.NOME }}
-            </strong>
+                        <v-list-item>
+                            <strong>Adicional:</strong>&nbsp;{{
+                                atletaSelecionado.ADICIONAL
+                            }}
+                        </v-list-item>
 
-            <br>
+                        <v-list-item>
+                            <strong>CPF:</strong>&nbsp;{{
+                                atletaSelecionado.CPF
+                            }}
+                        </v-list-item>
+                    </v-list>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer />
 
-            CPF:
-            {{ atletaSelecionado?.CPF }}
+                    <v-btn color="grey" @click="dialogEntrega = false">
+                        Cancelar
+                    </v-btn>
 
-        </v-card-text>
-
-        <v-card-actions>
-
-            <v-spacer />
-
-            <v-btn
-                color="grey"
-                @click="dialogEntrega = false"
-            >
-                Cancelar
-            </v-btn>
-
-            <v-btn
-                color="success"
-                @click="confirmarEntrega"
-            >
-                Confirmar
-            </v-btn>
-
-        </v-card-actions>
-
-    </v-card>
-</v-dialog>
+                    <v-btn color="success" @click="confirmarEntrega">
+                        Confirmar
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 
@@ -187,30 +208,40 @@ const filtroModalidade = ref(null);
 const filtroCpf = ref("");
 const dialogEntrega = ref(false);
 const atletaSelecionado = ref(null);
-async function carregarDados() {
 
-    const { data } = await axios.get(
-        `/api/excel/${route.params.id}`
-    );
+const totalKitsEntregues = computed(
+    () => itemsFiltrados.value.filter((item) => item.UNIFORM_ENTREGUE).length,
+);
+
+const totalKitsPendentes = computed(
+    () => itemsFiltrados.value.filter((item) => !item.UNIFORM_ENTREGUE).length,
+);
+
+async function carregarDados() {
+    const { data } = await axios.get(`/api/excel/${route.params.id}`);
 
     const headersOriginais = data.headers;
 
     const indicesOcultos = [1];
 
     headers.value = headersOriginais
-        .filter((col, index) =>
-            !indicesOcultos.includes(index) &&
-            col !== "UNIFORM_ENTREGUE"
+        .filter(
+            (col, index) =>
+                !indicesOcultos.includes(index) && col !== "UNIFORM_ENTREGUE",
         )
-        .map(col => ({
+        .map((col) => ({
             title: col,
             key: col,
             sortable: true,
         }));
 
-    const indiceNum = headers.value.findIndex(
-        h => h.key === "NUM"
-    );
+    headers.value.forEach((header) => {
+        if (header.key === "NUM") {
+            header.width = "30px";
+        }
+    });
+
+    const indiceNum = headers.value.findIndex((h) => h.key === "NUM");
 
     headers.value.splice(indiceNum + 1, 0, {
         title: "KITS",
@@ -220,12 +251,21 @@ async function carregarDados() {
         align: "center",
     });
 
-    items.value = data.rows.map(row => {
+    // TROCA ADICIONAL COM MOD
+    const idxMod = headers.value.findIndex((h) => h.key === "MOD");
+    const idxAdicional = headers.value.findIndex((h) => h.key === "ADICIONAL");
 
+    if (idxMod !== -1 && idxAdicional !== -1) {
+        [headers.value[idxMod], headers.value[idxAdicional]] = [
+            headers.value[idxAdicional],
+            headers.value[idxMod],
+        ];
+    }
+
+    items.value = data.rows.map((row) => {
         const obj = {};
 
         headersOriginais.forEach((header, index) => {
-
             if (indicesOcultos.includes(index)) {
                 return;
             }
@@ -238,13 +278,11 @@ async function carregarDados() {
 }
 
 onMounted(() => {
-
     carregarDados();
 
     setInterval(() => {
         carregarDados();
     }, 5000);
-
 });
 
 function abrirEntrega(item) {
@@ -257,20 +295,16 @@ function abrirEntrega(item) {
 }
 
 async function confirmarEntrega() {
-
     try {
-
         await axios.post("/uniforme/entregar", {
             corrida_id: route.params.id,
-            cpf: atletaSelecionado.value.NUM
+            cpf: atletaSelecionado.value.NUM,
         });
 
         dialogEntrega.value = false;
 
         location.reload();
-
     } catch (error) {
-
         console.error(error);
         alert("Erro ao registrar entrega");
     }
@@ -330,6 +364,28 @@ const totalEquipes = computed(
 </script>
 
 <style scoped>
+.kpi-entregues {
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    color: white;
+}
+
+.kpi-pendentes {
+    background: linear-gradient(135deg, #dc2626, #ef4444);
+    color: white;
+}
+
+:deep(.v-table .v-table__wrapper table td),
+:deep(.v-table .v-table__wrapper table th) {
+    padding: 0 6px !important;
+}
+
+:deep(th:first-child),
+:deep(td:first-child) {
+    width: 50px !important;
+    min-width: 50px !important;
+    max-width: 50px !important;
+}
+
 .page-wrapper {
     background: #f1f5f9;
     min-height: 100vh;
@@ -414,7 +470,5 @@ const totalEquipes = computed(
     transition: 0.15s;
 }
 </style>
-
-
 
 '

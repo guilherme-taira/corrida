@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\EntregaUniforme;
+use Illuminate\Support\Facades\DB;
 
 set_time_limit(0); // tempo em segundos
 
@@ -40,6 +41,79 @@ class corridaController extends Controller
         'viewData' => [
             'title' => 'Lista de Corridas',
         ]
+    ]);
+}
+
+
+public function eventosOnline(){
+        $eventos = DB::connection('mysql_online')
+        ->table('corridas')
+        ->orderByDesc('id')
+        ->get();
+
+    return response()->json($eventos);
+}
+
+public function importarEvento(Request $request)
+{
+    $corridaOnlineId = $request->corrida_online_id;
+
+    /*
+    |--------------------------------------------------------------------------
+    | BUSCA EVENTO ONLINE
+    |--------------------------------------------------------------------------
+    */
+
+    $eventoOnline = DB::connection('mysql_online')
+        ->table('corridas')
+        ->where('id', $corridaOnlineId)
+        ->first();
+
+    if (!$eventoOnline) {
+
+        return response()->json([
+            'message' => 'Evento não encontrado'
+        ], 404);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | CRIA EVENTO LOCAL
+    |--------------------------------------------------------------------------
+    */
+
+    $corridaLocal = new \App\Models\corridas();
+
+    $corridaLocal->name = $eventoOnline->name;
+    $corridaLocal->cidade = $eventoOnline->cidade;
+    $corridaLocal->local = $eventoOnline->local;
+    $corridaLocal->dados = $eventoOnline->dados;
+    $corridaLocal->save();
+
+    /*
+    |--------------------------------------------------------------------------
+    | IMPORTA ENTREGAS
+    |--------------------------------------------------------------------------
+    */
+
+    $entregas = DB::connection('mysql_online')
+        ->table('entrega_uniformes')
+        ->where('corrida_id', $corridaOnlineId)
+        ->get();
+
+
+    foreach ($entregas as $entrega) {
+        EntregaUniforme::create([
+            'corrida_id' => $corridaLocal->id, // ID LOCAL
+            'cpf' => $entrega->cpf,
+            'entregue_em' => $entrega->entregue_em,
+            'created_at' => $entrega->created_at,
+            'updated_at' => $entrega->updated_at,
+        ]);
+    }
+
+    return response()->json([
+        'message' => 'Evento importado com sucesso'
     ]);
 }
 
